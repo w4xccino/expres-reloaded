@@ -320,92 +320,64 @@
     </transition>
   </header>
 
-  <!-- =================== HERO =================== -->
+  <!-- =================== HERO + PLAYER =================== -->
   <section id="hero" class="hero-bg grid-pattern min-h-screen flex items-center relative overflow-hidden pt-16">
 
-    <!-- Decorative red lines -->
+    <!-- Decorative lines -->
     <div class="absolute top-0 right-0 w-px h-full bg-gradient-to-b from-transparent via-brand-red/30 to-transparent"></div>
     <div class="absolute top-1/2 left-0 w-full h-px bg-gradient-to-r from-transparent via-brand-red/10 to-transparent"></div>
 
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full py-20">
-      <div class="grid lg:grid-cols-2 gap-12 items-center">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full py-12 lg:py-20">
+      <div class="grid lg:grid-cols-5 gap-8 lg:gap-12 items-center">
 
-        <!-- Text content -->
-        <div class="order-2 lg:order-1">
-          <div class="flex items-center gap-2 mb-6">
-            <span class="live-dot w-2.5 h-2.5 rounded-full bg-brand-red inline-block"></span>
-            <span class="text-brand-red text-sm font-semibold uppercase tracking-widest">En el aire</span>
+        <!-- LEFT: Branding (2/5) -->
+        <div class="lg:col-span-2 order-2 lg:order-1 text-center lg:text-left">
+
+          <!-- Logo -->
+          <div class="flex justify-center lg:justify-start mb-5">
+            <div class="relative w-28 h-28 sm:w-32 sm:h-32">
+              <div class="absolute inset-0 rounded-full bg-brand-red/10 animate-ping" style="animation-duration:3s;"></div>
+              <div class="absolute inset-6 rounded-full bg-brand-red/5 animate-ping" style="animation-duration:3s;animation-delay:0.5s;"></div>
+              <img src="assets/img/logo.png" alt="Radio Expres"
+                   class="logo-float relative z-10 w-full h-full object-contain"
+                   style="filter: drop-shadow(0 0 30px rgba(224,16,32,0.5));" />
+            </div>
           </div>
 
-          <h1 class="font-display text-6xl sm:text-7xl lg:text-8xl leading-none mb-4 text-white">
+          <div class="flex items-center gap-2 mb-4 justify-center lg:justify-start">
+            <span :class="['live-dot w-2 h-2 rounded-full', playing ? 'bg-brand-red' : 'bg-zinc-600']"></span>
+            <span class="text-brand-red text-xs font-semibold uppercase tracking-widest">
+              {{ playing ? 'En el aire ahora' : '100% Online · Desde Perú' }}
+            </span>
+          </div>
+
+          <h1 class="font-display text-5xl sm:text-6xl lg:text-7xl leading-none mb-2 text-white">
             ROCK
             <span class="text-brand-red">&amp;</span>
             POP
           </h1>
-          <h2 class="font-display text-3xl sm:text-4xl lg:text-5xl text-zinc-400 leading-tight mb-6">
+          <h2 class="font-display text-2xl sm:text-3xl lg:text-4xl text-zinc-500 leading-tight mb-6">
             DE TU MEJOR ÉPOCA
           </h2>
 
-          <p class="text-zinc-400 text-lg leading-relaxed max-w-lg mb-8">
-            Revive la magia de los <span class="text-white font-semibold">60s, 70s, 80s y 90s</span>.
-            Tu destino para los clásicos que marcaron generaciones.
+          <p class="text-zinc-500 text-sm leading-relaxed mb-7 hidden lg:block max-w-xs">
+            Los clásicos de los <span class="text-zinc-300">60s, 70s, 80s y 90s</span> que marcaron generaciones. Escúchanos en vivo, siempre.
           </p>
 
-          <div class="flex flex-wrap gap-4">
-            <button @click="scrollTo('player')"
-                    class="flex items-center gap-3 bg-brand-red hover:bg-brand-red-light text-white font-semibold px-6 py-3.5 rounded-full transition-all duration-200 hover:shadow-xl hover:shadow-red-900/40 hover:-translate-y-0.5">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M8 5v14l11-7z"/>
-              </svg>
-              Escuchar en Vivo
-            </button>
-            <a href="https://drive.google.com/uc?export=download&id=1Co4zW3yb6DYUBdbfsYqvUVIaOtuD-VGB"
-               download
-               class="flex items-center gap-3 border border-zinc-700 hover:border-brand-red text-zinc-300 hover:text-white font-semibold px-6 py-3.5 rounded-full transition-all duration-200 hover:-translate-y-0.5">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-[#3DDC84]" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M6 18c0 .55.45 1 1 1h1v3.5c0 .83.67 1.5 1.5 1.5s1.5-.67 1.5-1.5V19h2v3.5c0 .83.67 1.5 1.5 1.5s1.5-.67 1.5-1.5V19h1c.55 0 1-.45 1-1V8H6v10zM3.5 8C2.67 8 2 8.67 2 9.5v7c0 .83.67 1.5 1.5 1.5S5 17.33 5 16.5v-7C5 8.67 4.33 8 3.5 8zm17 0c-.83 0-1.5.67-1.5 1.5v7c0 .83.67 1.5 1.5 1.5s1.5-.67 1.5-1.5v-7c0-.83-.67-1.5-1.5-1.5zm-4.97-5.84 1.3-1.3c.2-.2.2-.51 0-.71-.2-.2-.51-.2-.71 0l-1.48 1.48A6.93 6.93 0 0 0 12 1a6.9 6.9 0 0 0-2.66.63L7.85.15c-.2-.2-.51-.2-.71 0-.2.2-.2.51 0 .71l1.31 1.31A6.962 6.962 0 0 0 5 8h14a6.96 6.96 0 0 0-2.47-4.84zM10 5H9V4h1v1zm5 0h-1V4h1v1z"/>
-              </svg>
-              App Android
-            </a>
-          </div>
+          <a href="https://drive.google.com/uc?export=download&id=1Co4zW3yb6DYUBdbfsYqvUVIaOtuD-VGB"
+             target="_blank" rel="noopener" download
+             class="inline-flex items-center gap-2.5 border border-zinc-700 hover:border-brand-red text-zinc-400 hover:text-white text-sm font-semibold px-5 py-2.5 rounded-full transition-all duration-200 hover:-translate-y-0.5">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-[#3DDC84]" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M6 18c0 .55.45 1 1 1h1v3.5c0 .83.67 1.5 1.5 1.5s1.5-.67 1.5-1.5V19h2v3.5c0 .83.67 1.5 1.5 1.5s1.5-.67 1.5-1.5V19h1c.55 0 1-.45 1-1V8H6v10zM3.5 8C2.67 8 2 8.67 2 9.5v7c0 .83.67 1.5 1.5 1.5S5 17.33 5 16.5v-7C5 8.67 4.33 8 3.5 8zm17 0c-.83 0-1.5.67-1.5 1.5v7c0 .83.67 1.5 1.5 1.5s1.5-.67 1.5-1.5v-7c0-.83-.67-1.5-1.5-1.5zm-4.97-5.84 1.3-1.3c.2-.2.2-.51 0-.71-.2-.2-.51-.2-.71 0l-1.48 1.48A6.93 6.93 0 0 0 12 1a6.9 6.9 0 0 0-2.66.63L7.85.15c-.2-.2-.51-.2-.71 0-.2.2-.2.51 0 .71l1.31 1.31A6.962 6.962 0 0 0 5 8h14a6.96 6.96 0 0 0-2.47-4.84zM10 5H9V4h1v1zm5 0h-1V4h1v1z"/>
+            </svg>
+            App Android
+          </a>
         </div>
 
-        <!-- Logo -->
-        <div class="order-1 lg:order-2 flex justify-center">
-          <div class="relative w-64 h-64 sm:w-80 sm:h-80 lg:w-96 lg:h-96">
-            <!-- Glow rings -->
-            <div class="absolute inset-0 rounded-full bg-brand-red/10 animate-ping" style="animation-duration:3s;"></div>
-            <div class="absolute inset-8 rounded-full bg-brand-red/5 animate-ping" style="animation-duration:3s; animation-delay:0.5s;"></div>
-            <img src="assets/img/logo.png"
-                 alt="Radio Expres"
-                 class="logo-float relative z-10 w-full h-full object-contain drop-shadow-2xl"
-                 style="filter: drop-shadow(0 0 40px rgba(224,16,32,0.4));" />
-          </div>
-        </div>
-
-      </div>
-    </div>
-
-    <!-- Scroll indicator — oculto en mobile para no apretujar -->
-    <div class="hidden sm:flex absolute bottom-8 left-1/2 -translate-x-1/2 flex-col items-center gap-2 text-zinc-600">
-      <span class="text-xs uppercase tracking-widest">Scroll</span>
-      <div class="w-px h-12 bg-gradient-to-b from-zinc-600 to-transparent"></div>
-    </div>
-  </section>
-
-
-  <!-- =================== PLAYER =================== -->
-  <section id="player" class="py-20 bg-[#0d0d0d]">
-    <div class="max-w-3xl mx-auto px-4 sm:px-6">
-
-      <div class="text-center mb-10">
-        <p class="text-brand-red text-sm font-semibold uppercase tracking-widest mb-2">Radio Expres</p>
-        <h2 class="font-display text-4xl sm:text-5xl text-white">EN VIVO</h2>
-        <div class="section-line mx-auto mt-3"></div>
-      </div>
-
-      <!-- Player Card -->
-      <div class="player-glow bg-zinc-900 rounded-2xl overflow-hidden border border-zinc-800">
+        <!-- RIGHT: Player (3/5) -->
+        <div class="lg:col-span-3 order-1 lg:order-2">
+          <!-- Player Card -->
+          <div class="player-glow bg-zinc-900 rounded-2xl overflow-hidden border border-zinc-800">
 
         <!-- Top bar -->
         <div class="bg-zinc-800/60 px-5 py-3 flex items-center justify-between border-b border-zinc-700/50">
@@ -545,6 +517,14 @@
       <!-- Hidden audio element -->
       <audio ref="audioEl" preload="none"></audio>
 
+        </div><!-- /right col -->
+      </div><!-- /grid -->
+    </div><!-- /max-w-7xl -->
+
+    <!-- Scroll indicator -->
+    <div class="hidden sm:flex absolute bottom-8 left-1/2 -translate-x-1/2 flex-col items-center gap-2 text-zinc-600">
+      <span class="text-xs uppercase tracking-widest">Scroll</span>
+      <div class="w-px h-12 bg-gradient-to-b from-zinc-600 to-transparent"></div>
     </div>
   </section>
 
@@ -812,7 +792,7 @@
       <!-- Bottom tagline -->
       <div class="mt-8 pt-6 border-t border-zinc-800/50 text-center">
         <p class="text-zinc-700 text-xs tracking-widest uppercase">
-          Rock &amp; Pop de los 60s · 70s · 80s · 90s &nbsp;|&nbsp; Espinar · Cusco · Perú
+          Rock &amp; Pop de los 60s · 70s · 80s · 90s &nbsp;|&nbsp; Radio 100% Online · Desde Perú
         </p>
       </div>
     </div>
@@ -832,8 +812,7 @@ createApp({
     const mobileMenuOpen = ref(false);
 
     const navLinks = [
-      { id: 'hero',           label: 'Inicio' },
-      { id: 'player',         label: 'En Vivo' },
+      { id: 'hero',           label: 'En Vivo' },
       { id: 'about',          label: 'Nosotros' },
       { id: 'programas',      label: 'Programas' },
       { id: 'patrocinadores', label: 'Patrocinadores' },
@@ -853,34 +832,10 @@ createApp({
     // ─── DJ / Programs data ───────────────────────────────────────
     const djs = [
       {
-        name: 'Jaime Santiago',
-        program: 'Desayuno Express',
-        schedule: 'Lun–Vie · 6:00 am – 8:00 am',
-        description: 'Arranca tu día con la mejor energía. La selección musical que necesitas para empezar con fuerza de lunes a viernes.',
-        photo: 'assets/img/team/jaimesantiago.jpg',
-        facebook: null,
-      },
-      {
-        name: 'Mara Gamero Rosas',
-        program: 'Ciudad Sónica',
-        schedule: 'Lun–Vie · 8:00 am – 10:00 am',
-        description: 'Sumérgete en el vibrante universo musical que Mara tiene preparado para ti cada mañana de lunes a viernes.',
-        photo: 'assets/img/team/maragamero.jpg',
-        facebook: null,
-      },
-      {
-        name: 'Luis Eduardo',
-        program: 'Retromanía',
-        schedule: 'Sáb–Dom · 6:00 am – 8:00 am',
-        description: '¡Despiértate con la energía de los 80s y 90s! Un viaje musical a la mejor época cada fin de semana.',
-        photo: 'assets/img/team/luiseduardo.png',
-        facebook: null,
-      },
-      {
         name: 'Willy Toledo Solís',
         program: 'Retrospectiva',
         schedule: 'Sáb–Dom · 8:00 am – 10:00 am',
-        description: 'Clásicos con historia. Un viaje musical desde los movidos 60s hasta los vibrantes 90s.',
+        description: 'Clásicos con historia. Un viaje musical desde los movidos 60s hasta los vibrantes 90s. Los fines de semana son tuyos.',
         photo: 'assets/img/team/willy.png',
         facebook: null,
       },
@@ -888,17 +843,9 @@ createApp({
         name: 'Jaime Valencia',
         program: 'De Colección',
         schedule: 'Sáb–Dom · 10:00 am – 12:00 pm',
-        description: 'Los temas más memorables de todas las épocas en un programa de coleccionista.',
+        description: 'Los temas más memorables de todas las épocas en un programa de coleccionista. Música que no pasa de moda.',
         photo: 'assets/img/team/jaime.jpg',
         facebook: 'https://www.facebook.com/jaime.valencia.161',
-      },
-      {
-        name: 'Javier Portillo Zamora',
-        program: 'Billboard Forever',
-        schedule: 'Sáb–Dom · 12:30 pm – 3:00 pm',
-        description: 'Los éxitos que dominaron los rankings internacionales, para siempre en tu corazón.',
-        photo: 'assets/img/team/javierportillo.jpg',
-        facebook: 'https://www.facebook.com/javieresau.portillozamora',
       },
     ];
 

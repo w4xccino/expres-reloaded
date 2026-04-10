@@ -44,14 +44,13 @@ radio-expres-reloaded/
 ## Secciones del sitio
 
 1. **Navbar** — fija, transparente → negro con blur al hacer scroll, hamburger en mobile
-2. **Hero** — full-screen, logo flotante con glow animado, botones "Escuchar en Vivo" y "App Android"
-3. **Player** — reproductor de radio en vivo (ver detalles abajo)
-4. **Nosotros** — grid de décadas 60s/70s/80s/90s + descripción
-5. **Programas** — cards de los 6 DJs con foto, programa, horario y links
-6. **Patrocinadores** — slots disponibles para marcas
-7. **Publicidad** — CTA para anunciantes
-8. **Contacto** — cards de WhatsApp, Email y Facebook
-9. **Footer** — logo, links, copyright, "Espinar · Cusco · Perú"
+2. **Hero + Player** — sección combinada full-screen: branding izquierda (logo, tagline, app), player derecha — lo primero visible al entrar
+3. **Nosotros** — grid de décadas 60s/70s/80s/90s + descripción
+4. **Programas** — cards de los 2 DJs activos (Willy Toledo y Jaime Valencia)
+5. **Patrocinadores** — slots disponibles para marcas
+6. **Publicidad** — CTA para anunciantes
+7. **Contacto** — cards de WhatsApp, Email y Facebook
+8. **Footer** — logo, links, copyright, "Radio 100% Online · Desde Perú"
 
 ---
 
@@ -106,12 +105,8 @@ El browser acumula buffer del stream live indefinidamente, causando glitches des
 
 | Locutor | Programa | Horario |
 |---|---|---|
-| Jaime Santiago | Desayuno Express | Lun–Vie 6–8 am |
-| Mara Gamero Rosas | Ciudad Sónica | Lun–Vie 8–10 am |
-| Luis Eduardo | Retromanía | Sáb–Dom 6–8 am |
 | Willy Toledo Solís | Retrospectiva | Sáb–Dom 8–10 am |
 | Jaime Valencia | De Colección | Sáb–Dom 10 am–12 pm |
-| Javier Portillo Zamora | Billboard Forever | Sáb–Dom 12:30–3 pm |
 
 ---
 
