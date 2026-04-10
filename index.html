@@ -876,54 +876,100 @@ createApp({
     const artworkCache   = new Map(); // rawTitle → { url, source }
 
     // ── Audio init ────────────────────────────────────────────────
+    let userStopped       = false; // true = pausa intencional del usuario
+    let reconnectAttempts = 0;
+    const MAX_RECONNECT   = 6;
+
     function initAudio() {
       const audio = audioEl.value;
       if (!audio) return;
       audio.volume = volume.value / 100;
-      audio.addEventListener('playing', () => { playing.value = true; loading.value = false; error.value = null; });
-      audio.addEventListener('waiting', () => { loading.value = true; });
-      audio.addEventListener('pause',   () => { playing.value = false; loading.value = false; });
-      audio.addEventListener('error',   () => {
+
+      // Stream sonando → limpiar estado
+      audio.addEventListener('playing', () => {
+        playing.value       = true;
+        loading.value       = false;
+        error.value         = null;
+        reconnectAttempts   = 0;
+      });
+
+      // Buffer agotado momentáneamente
+      audio.addEventListener('waiting', () => {
+        if (!userStopped) loading.value = true;
+      });
+
+      // NO escuchamos 'pause' para cambiar estado — nosotros lo manejamos
+      // manualmente, así que el evento 'pause' no interfiere con reconexiones.
+
+      // Error de red / stream caído
+      audio.addEventListener('error', () => {
+        if (userStopped) return;
         loading.value = false;
         playing.value = false;
-        error.value = 'Error al conectar con la transmisión. Intentando reconectar…';
-        setTimeout(reconnect, 4000);
+        scheduleReconnect();
       });
+
+      // Stream se atascó
       audio.addEventListener('stalled', () => {
+        if (userStopped) return;
         loading.value = true;
         setTimeout(() => {
-          if (loading.value && playing.value) reconnect();
-        }, 8000);
+          if (!userStopped && loading.value) scheduleReconnect();
+        }, 6000);
+      });
+
+      // 'ended' no debería pasar en live, pero por si acaso
+      audio.addEventListener('ended', () => {
+        if (!userStopped) scheduleReconnect();
       });
     }
 
-    function reconnect() {
-      if (!audioEl.value) return;
-      const wasPlaying = playing.value;
-      audioEl.value.src = '';
-      if (wasPlaying) {
-        setTimeout(() => {
-          audioEl.value.src = STREAM_URL + '?' + Date.now();
-          audioEl.value.play().catch(() => {});
-        }, 1000);
+    // Programa un reintento con backoff (2s · 4s · 6s · 8s · 10s · 10s)
+    function scheduleReconnect() {
+      if (userStopped) return;
+      if (reconnectAttempts >= MAX_RECONNECT) {
+        error.value = 'Sin conexión. Haz clic en ▶ para reintentar.';
+        reconnectAttempts = 0;
+        return;
+      }
+      reconnectAttempts++;
+      const delay = Math.min(2000 * reconnectAttempts, 10000);
+      error.value   = `Reconectando… (${reconnectAttempts}/${MAX_RECONNECT})`;
+      loading.value = true;
+      setTimeout(doReconnect, delay);
+    }
+
+    async function doReconnect() {
+      if (userStopped) return;
+      const audio = audioEl.value;
+      if (!audio) return;
+      error.value   = null;
+      audio.src     = STREAM_URL + '?' + Date.now();
+      audio.volume  = muted.value ? 0 : volume.value / 100;
+      try {
+        await audio.play();
+        startMeta();
+        startBufferMonitor();
+      } catch (_) {
+        if (!userStopped) scheduleReconnect();
       }
     }
 
-    // Reload silencioso para corregir buffer bloat sin interrumpir experiencia
+    // Reload silencioso para corregir buffer bloat
     async function silentReload() {
       const audio = audioEl.value;
-      if (!audio || !playing.value) return;
-      const savedVol = audio.volume;
-      audio.src = STREAM_URL + '?' + Date.now();
-      audio.volume = savedVol;
+      if (!audio || !playing.value || userStopped) return;
+      audio.src    = STREAM_URL + '?' + Date.now();
+      audio.volume = muted.value ? 0 : volume.value / 100;
       try { await audio.play(); } catch (_) {}
     }
 
     // Monitorea el buffer cada 15s; si está muy adelantado, recarga
     function startBufferMonitor() {
+      stopBufferMonitor();
       bufferTimer = setInterval(() => {
         const audio = audioEl.value;
-        if (!audio || !playing.value || audio.buffered.length === 0) return;
+        if (!audio || !playing.value || userStopped || audio.buffered.length === 0) return;
         const ahead = audio.buffered.end(audio.buffered.length - 1) - audio.currentTime;
         if (ahead > MAX_BUFFER_AHEAD) silentReload();
       }, 15000);
@@ -936,28 +982,35 @@ createApp({
     async function togglePlay() {
       const audio = audioEl.value;
       if (!audio) return;
-      error.value = null;
 
+      // ── DETENER ──
       if (playing.value || loading.value) {
+        userStopped       = true;
+        reconnectAttempts = 0;
         audio.pause();
-        audio.src = '';
+        audio.src     = '';
         playing.value = false;
         loading.value = false;
+        error.value   = null;
         stopMeta();
         stopBufferMonitor();
         return;
       }
 
-      loading.value = true;
-      audio.src = STREAM_URL + '?' + Date.now();
-      audio.volume = muted.value ? 0 : volume.value / 100;
+      // ── REPRODUCIR ──
+      userStopped       = false;
+      reconnectAttempts = 0;
+      error.value       = null;
+      loading.value     = true;
+      audio.src         = STREAM_URL + '?' + Date.now();
+      audio.volume      = muted.value ? 0 : volume.value / 100;
       try {
         await audio.play();
         startMeta();
         startBufferMonitor();
       } catch (e) {
         loading.value = false;
-        error.value = 'No se pudo iniciar la reproducción. Intenta de nuevo.';
+        if (!userStopped) error.value = 'No se pudo iniciar. Intenta de nuevo.';
       }
     }
 
