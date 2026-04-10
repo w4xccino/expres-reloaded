@@ -1,0 +1,1185 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Radio Expres | Rock &amp; Pop de tu Mejor Época</title>
+  <meta name="description" content="Radio Expres - Rock y Pop de los 60s, 70s, 80s y 90s. Escúchanos en vivo desde Perú." />
+  <!-- Favicon SVG — nota musical sobre fondo negro/rojo -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230a0a0a'/%3E%3Cellipse cx='11' cy='24' rx='4.5' ry='3' transform='rotate(-15 11 24)' fill='%23e01020'/%3E%3Crect x='15' y='8' width='2.2' height='16' rx='1' fill='%23e01020'/%3E%3Cpath d='M17.2 8 Q25 10 23 17' fill='none' stroke='%23e01020' stroke-width='2.2' stroke-linecap='round'/%3E%3C/svg%3E" />
+  <link rel="apple-touch-icon" href="assets/img/favicon.png" />
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Bebas+Neue&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Vue 3 CDN -->
+  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              red: '#e01020',
+              'red-dark': '#b50d1a',
+              'red-light': '#f52535',
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            display: ['Bebas Neue', 'sans-serif'],
+          },
+          animation: {
+            'pulse-slow': 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+            'float': 'float 6s ease-in-out infinite',
+            'marquee': 'marquee 18s linear infinite',
+            'bar1': 'bar 0.8s ease-in-out infinite alternate',
+            'bar2': 'bar 0.9s ease-in-out 0.1s infinite alternate',
+            'bar3': 'bar 0.7s ease-in-out 0.2s infinite alternate',
+            'bar4': 'bar 1.1s ease-in-out 0.05s infinite alternate',
+            'bar5': 'bar 0.85s ease-in-out 0.3s infinite alternate',
+            'bar6': 'bar 0.75s ease-in-out 0.15s infinite alternate',
+            'bar7': 'bar 0.95s ease-in-out 0.25s infinite alternate',
+            'bar8': 'bar 0.65s ease-in-out 0.35s infinite alternate',
+            'spin-slow': 'spin 8s linear infinite',
+          },
+          keyframes: {
+            float: {
+              '0%, 100%': { transform: 'translateY(0px)' },
+              '50%': { transform: 'translateY(-20px)' },
+            },
+            marquee: {
+              '0%': { transform: 'translateX(100%)' },
+              '100%': { transform: 'translateX(-100%)' },
+            },
+            bar: {
+              '0%': { height: '20%' },
+              '100%': { height: '100%' },
+            },
+          },
+        }
+      }
+    }
+  </script>
+
+  <style>
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background-color: #0a0a0a;
+      color: #fff;
+      font-family: 'Inter', sans-serif;
+      overflow-x: hidden;
+    }
+
+    /* Custom scrollbar */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: #111; }
+    ::-webkit-scrollbar-thumb { background: #e01020; border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: #f52535; }
+
+    /* Animated gradient hero */
+    .hero-bg {
+      background: radial-gradient(ellipse at 70% 50%, rgba(224, 16, 32, 0.15) 0%, transparent 60%),
+                  radial-gradient(ellipse at 30% 80%, rgba(224, 16, 32, 0.08) 0%, transparent 50%),
+                  #0a0a0a;
+    }
+
+    /* Grid pattern overlay */
+    .grid-pattern {
+      background-image: linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+                        linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+      background-size: 50px 50px;
+    }
+
+    /* Logo float animation */
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-18px); }
+    }
+    .logo-float { animation: float 6s ease-in-out infinite; }
+
+    /* Visualizer bars — transform-based for GPU performance */
+    @keyframes barPulse {
+      0%   { transform: scaleY(0.12); opacity: 0.5; }
+      100% { transform: scaleY(1);    opacity: 1;   }
+    }
+
+    .viz-bar {
+      animation: barPulse ease-in-out infinite alternate;
+      border-radius: 2px;
+      transform-origin: bottom;
+    }
+    .viz-bar:nth-child(1)  { animation-duration: 0.80s; animation-delay: 0.00s; }
+    .viz-bar:nth-child(2)  { animation-duration: 0.70s; animation-delay: 0.10s; }
+    .viz-bar:nth-child(3)  { animation-duration: 0.90s; animation-delay: 0.05s; }
+    .viz-bar:nth-child(4)  { animation-duration: 0.65s; animation-delay: 0.20s; }
+    .viz-bar:nth-child(5)  { animation-duration: 0.85s; animation-delay: 0.15s; }
+    .viz-bar:nth-child(6)  { animation-duration: 0.75s; animation-delay: 0.30s; }
+    .viz-bar:nth-child(7)  { animation-duration: 0.95s; animation-delay: 0.08s; }
+    .viz-bar:nth-child(8)  { animation-duration: 0.60s; animation-delay: 0.25s; }
+    .viz-bar:nth-child(9)  { animation-duration: 0.88s; animation-delay: 0.12s; }
+    .viz-bar:nth-child(10) { animation-duration: 0.72s; animation-delay: 0.35s; }
+    .viz-bar:nth-child(11) { animation-duration: 0.82s; animation-delay: 0.05s; }
+    .viz-bar:nth-child(12) { animation-duration: 0.68s; animation-delay: 0.18s; }
+    .viz-bar:nth-child(13) { animation-duration: 0.92s; animation-delay: 0.22s; }
+    .viz-bar:nth-child(14) { animation-duration: 0.78s; animation-delay: 0.03s; }
+    .viz-bar:nth-child(15) { animation-duration: 0.63s; animation-delay: 0.28s; }
+    .viz-bar:nth-child(16) { animation-duration: 0.86s; animation-delay: 0.14s; }
+    .viz-bar:nth-child(17) { animation-duration: 0.76s; animation-delay: 0.38s; }
+    .viz-bar:nth-child(18) { animation-duration: 0.96s; animation-delay: 0.07s; }
+
+    .viz-bar.paused {
+      animation-play-state: paused;
+      transform: scaleY(0.12) !important;
+      opacity: 0.35;
+    }
+
+    /* Marquee */
+    @keyframes marquee {
+      0%   { transform: translateX(100%); }
+      100% { transform: translateX(-100%); }
+    }
+    .marquee-text { animation: marquee 16s linear infinite; white-space: nowrap; display: inline-block; }
+    .marquee-container { overflow: hidden; white-space: nowrap; }
+
+    /* Live pulse */
+    @keyframes livePulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(224,16,32,0.7); }
+      50% { box-shadow: 0 0 0 8px rgba(224,16,32,0); }
+    }
+    .live-dot { animation: livePulse 1.5s ease-in-out infinite; }
+
+    /* Navbar blur */
+    .navbar-scrolled {
+      background: rgba(10, 10, 10, 0.95) !important;
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(224, 16, 32, 0.2);
+    }
+
+    /* Player glow */
+    .player-glow {
+      box-shadow: 0 0 60px rgba(224, 16, 32, 0.15), 0 25px 50px rgba(0,0,0,0.5);
+    }
+
+    /* Album art glow */
+    .album-glow {
+      box-shadow: 0 0 30px rgba(224, 16, 32, 0.3), 0 8px 32px rgba(0,0,0,0.6);
+      transition: box-shadow 0.4s ease;
+    }
+
+    /* Breathing — pulsing glow while fetching artwork */
+    @keyframes breatheGlow {
+      0%, 100% {
+        box-shadow: 0 0 12px rgba(224,16,32,0.25), 0 8px 32px rgba(0,0,0,0.6);
+        transform: scale(1);
+      }
+      50% {
+        box-shadow: 0 0 40px rgba(224,16,32,0.75), 0 0 60px rgba(224,16,32,0.3), 0 8px 32px rgba(0,0,0,0.6);
+        transform: scale(1.03);
+      }
+    }
+    .artwork-breathing {
+      animation: breatheGlow 1.6s ease-in-out infinite;
+    }
+
+    /* Section divider */
+    .section-line {
+      width: 48px;
+      height: 3px;
+      background: linear-gradient(90deg, #e01020, #f52535);
+      border-radius: 2px;
+    }
+
+    /* Volume slider */
+    input[type=range] {
+      -webkit-appearance: none;
+      appearance: none;
+      height: 4px;
+      background: #333;
+      border-radius: 2px;
+      outline: none;
+      cursor: pointer;
+    }
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: #e01020;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    input[type=range]::-webkit-slider-thumb:hover { background: #f52535; }
+    input[type=range]::-webkit-slider-runnable-track {
+      background: linear-gradient(to right, #e01020 var(--vol, 0%), #333 var(--vol, 0%));
+      border-radius: 2px;
+    }
+
+    /* Card hover */
+    .dj-card { transition: transform 0.3s ease, box-shadow 0.3s ease; }
+    .dj-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.4), 0 0 0 1px rgba(224,16,32,0.2);
+    }
+
+    /* Smooth transitions */
+    .fade-enter-active, .fade-leave-active { transition: opacity 0.5s ease; }
+    .fade-enter-from, .fade-leave-to { opacity: 0; }
+
+    /* Mobile menu */
+    .mobile-menu-enter-active { transition: all 0.3s ease; }
+    .mobile-menu-leave-active { transition: all 0.25s ease; }
+    .mobile-menu-enter-from, .mobile-menu-leave-to { opacity: 0; transform: translateY(-10px); }
+
+    /* Spin album art when playing */
+    @keyframes spinSlow {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+    .album-spinning { animation: spinSlow 12s linear infinite; border-radius: 50% !important; }
+    .album-spinning.paused { animation-play-state: paused; }
+  </style>
+</head>
+
+<body class="bg-[#0a0a0a] text-white font-sans antialiased">
+<div id="app">
+
+  <!-- =================== NAVBAR =================== -->
+  <header
+    :class="['fixed top-0 left-0 right-0 z-50 transition-all duration-300 px-4 sm:px-6 lg:px-8', scrolled ? 'navbar-scrolled' : 'bg-transparent']">
+    <div class="max-w-7xl mx-auto flex items-center justify-between h-16 sm:h-20">
+
+      <!-- Logo -->
+      <a href="#hero" @click.prevent="scrollTo('hero')" class="flex items-center gap-3 group">
+        <img src="assets/img/logo.png" alt="Radio Expres" class="h-10 w-10 object-contain group-hover:scale-110 transition-transform duration-200" />
+        <div class="hidden sm:block">
+          <span class="font-display text-xl tracking-widest text-white">RADIO</span>
+          <span class="font-display text-xl tracking-widest text-brand-red"> EXPRES</span>
+        </div>
+      </a>
+
+      <!-- Desktop Nav -->
+      <nav class="hidden md:flex items-center gap-8">
+        <a v-for="link in navLinks" :key="link.id"
+           @click.prevent="scrollTo(link.id)"
+           href="#"
+           class="text-sm font-medium text-zinc-400 hover:text-white transition-colors duration-200 relative group">
+          {{ link.label }}
+          <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-brand-red group-hover:w-full transition-all duration-300"></span>
+        </a>
+        <a href="https://drive.google.com/uc?export=download&id=1Co4zW3yb6DYUBdbfsYqvUVIaOtuD-VGB"
+           download
+           class="flex items-center gap-2 bg-brand-red hover:bg-brand-red-light text-white text-sm font-semibold px-4 py-2 rounded-full transition-all duration-200 hover:shadow-lg hover:shadow-red-900/40">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+          </svg>
+          App Android
+        </a>
+      </nav>
+
+      <!-- Mobile hamburger -->
+      <button @click="mobileMenuOpen = !mobileMenuOpen"
+              class="md:hidden flex flex-col gap-1.5 p-2 rounded-md text-white">
+        <span :class="['block w-6 h-0.5 bg-current transition-all duration-300', mobileMenuOpen ? 'rotate-45 translate-y-2' : '']"></span>
+        <span :class="['block w-6 h-0.5 bg-current transition-all duration-300', mobileMenuOpen ? 'opacity-0' : '']"></span>
+        <span :class="['block w-6 h-0.5 bg-current transition-all duration-300', mobileMenuOpen ? '-rotate-45 -translate-y-2' : '']"></span>
+      </button>
+    </div>
+
+    <!-- Mobile menu -->
+    <transition name="mobile-menu">
+      <div v-if="mobileMenuOpen"
+           class="md:hidden bg-zinc-900 border-t border-zinc-800 px-4 py-4 space-y-3">
+        <a v-for="link in navLinks" :key="link.id"
+           @click.prevent="scrollTo(link.id); mobileMenuOpen = false"
+           href="#"
+           class="block py-2 text-zinc-300 hover:text-white font-medium transition-colors">
+          {{ link.label }}
+        </a>
+        <a href="https://drive.google.com/uc?export=download&id=1Co4zW3yb6DYUBdbfsYqvUVIaOtuD-VGB"
+           download
+           class="flex items-center gap-2 bg-brand-red text-white text-sm font-semibold px-4 py-2.5 rounded-full w-fit mt-2">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+          </svg>
+          App Android
+        </a>
+      </div>
+    </transition>
+  </header>
+
+  <!-- =================== HERO =================== -->
+  <section id="hero" class="hero-bg grid-pattern min-h-screen flex items-center relative overflow-hidden pt-16">
+
+    <!-- Decorative red lines -->
+    <div class="absolute top-0 right-0 w-px h-full bg-gradient-to-b from-transparent via-brand-red/30 to-transparent"></div>
+    <div class="absolute top-1/2 left-0 w-full h-px bg-gradient-to-r from-transparent via-brand-red/10 to-transparent"></div>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full py-20">
+      <div class="grid lg:grid-cols-2 gap-12 items-center">
+
+        <!-- Text content -->
+        <div class="order-2 lg:order-1">
+          <div class="flex items-center gap-2 mb-6">
+            <span class="live-dot w-2.5 h-2.5 rounded-full bg-brand-red inline-block"></span>
+            <span class="text-brand-red text-sm font-semibold uppercase tracking-widest">En el aire</span>
+          </div>
+
+          <h1 class="font-display text-6xl sm:text-7xl lg:text-8xl leading-none mb-4 text-white">
+            ROCK
+            <span class="text-brand-red">&amp;</span>
+            POP
+          </h1>
+          <h2 class="font-display text-3xl sm:text-4xl lg:text-5xl text-zinc-400 leading-tight mb-6">
+            DE TU MEJOR ÉPOCA
+          </h2>
+
+          <p class="text-zinc-400 text-lg leading-relaxed max-w-lg mb-8">
+            Revive la magia de los <span class="text-white font-semibold">60s, 70s, 80s y 90s</span>.
+            Tu destino para los clásicos que marcaron generaciones.
+          </p>
+
+          <div class="flex flex-wrap gap-4">
+            <button @click="scrollTo('player')"
+                    class="flex items-center gap-3 bg-brand-red hover:bg-brand-red-light text-white font-semibold px-6 py-3.5 rounded-full transition-all duration-200 hover:shadow-xl hover:shadow-red-900/40 hover:-translate-y-0.5">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M8 5v14l11-7z"/>
+              </svg>
+              Escuchar en Vivo
+            </button>
+            <a href="https://drive.google.com/uc?export=download&id=1Co4zW3yb6DYUBdbfsYqvUVIaOtuD-VGB"
+               download
+               class="flex items-center gap-3 border border-zinc-700 hover:border-brand-red text-zinc-300 hover:text-white font-semibold px-6 py-3.5 rounded-full transition-all duration-200 hover:-translate-y-0.5">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-[#3DDC84]" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.7 9.05 7.4c1.37.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.39-1.32 2.76-2.53 3.99zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/>
+              </svg>
+              App Android
+            </a>
+          </div>
+        </div>
+
+        <!-- Logo -->
+        <div class="order-1 lg:order-2 flex justify-center">
+          <div class="relative w-64 h-64 sm:w-80 sm:h-80 lg:w-96 lg:h-96">
+            <!-- Glow rings -->
+            <div class="absolute inset-0 rounded-full bg-brand-red/10 animate-ping" style="animation-duration:3s;"></div>
+            <div class="absolute inset-8 rounded-full bg-brand-red/5 animate-ping" style="animation-duration:3s; animation-delay:0.5s;"></div>
+            <img src="assets/img/logo.png"
+                 alt="Radio Expres"
+                 class="logo-float relative z-10 w-full h-full object-contain drop-shadow-2xl"
+                 style="filter: drop-shadow(0 0 40px rgba(224,16,32,0.4));" />
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Scroll indicator -->
+    <div class="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-zinc-600">
+      <span class="text-xs uppercase tracking-widest">Scroll</span>
+      <div class="w-px h-12 bg-gradient-to-b from-zinc-600 to-transparent"></div>
+    </div>
+  </section>
+
+
+  <!-- =================== PLAYER =================== -->
+  <section id="player" class="py-20 bg-[#0d0d0d]">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6">
+
+      <div class="text-center mb-10">
+        <p class="text-brand-red text-sm font-semibold uppercase tracking-widest mb-2">Radio Expres</p>
+        <h2 class="font-display text-4xl sm:text-5xl text-white">EN VIVO</h2>
+        <div class="section-line mx-auto mt-3"></div>
+      </div>
+
+      <!-- Player Card -->
+      <div class="player-glow bg-zinc-900 rounded-2xl overflow-hidden border border-zinc-800">
+
+        <!-- Top bar -->
+        <div class="bg-zinc-800/60 px-5 py-3 flex items-center justify-between border-b border-zinc-700/50">
+          <div class="flex items-center gap-2">
+            <span :class="['live-dot w-2 h-2 rounded-full', playing ? 'bg-brand-red' : 'bg-zinc-500']"></span>
+            <span :class="['text-xs font-bold uppercase tracking-widest', playing ? 'text-brand-red' : 'text-zinc-500']">
+              {{ playing ? 'EN VIVO' : 'RADIO EXPRES' }}
+            </span>
+          </div>
+          <div class="flex items-center gap-3 text-zinc-500">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.111 16.404a5.5 5.5 0 017.778 0M12 20h.01m-7.08-7.071c3.904-3.905 10.236-3.905 14.14 0M1.394 9.393c5.857-5.857 15.355-5.857 21.213 0" />
+            </svg>
+            <span class="text-xs font-medium">radioexpres.pe</span>
+          </div>
+        </div>
+
+        <!-- Main player area -->
+        <div class="p-5 sm:p-8">
+          <div class="flex flex-col sm:flex-row gap-6 sm:gap-8 items-center sm:items-start">
+
+            <!-- Album Art -->
+            <div class="shrink-0">
+              <div :class="['w-36 h-36 sm:w-44 sm:h-44 rounded-xl overflow-hidden album-glow relative', loadingArtwork ? 'artwork-breathing' : '']">
+                <transition name="fade">
+                  <img
+                    :key="artworkUrl"
+                    :src="artworkUrl || 'assets/img/logo-player.png'"
+                    @error="artworkUrl = null"
+                    :alt="songTitle || 'Radio Expres'"
+                    :class="['w-full h-full object-cover transition-all duration-500', playing ? 'album-spinning' : '']"
+                  />
+                </transition>
+              </div>
+            </div>
+
+            <!-- Song info + visualizer -->
+            <div class="flex-1 min-w-0 w-full sm:w-auto text-center sm:text-left">
+              <transition name="fade">
+                <div :key="songTitle">
+                  <p class="text-zinc-500 text-xs font-semibold uppercase tracking-widest mb-1">
+                    {{ playing ? 'Sonando ahora' : 'Listo para reproducir' }}
+                  </p>
+
+                  <!-- Artist -->
+                  <p class="text-brand-red font-semibold text-sm mb-0.5 truncate" :title="artistName">
+                    {{ artistName || 'Radio Expres' }}
+                  </p>
+
+                  <!-- Song title (marquee if long) -->
+                  <div class="mb-4">
+                    <div v-if="songTitle && songTitle.length > 28" class="marquee-container">
+                      <span class="marquee-text text-white font-bold text-xl">{{ songTitle }}</span>
+                    </div>
+                    <h3 v-else class="text-white font-bold text-xl leading-tight">
+                      {{ songTitle || 'Rock & Pop de tu Mejor Época' }}
+                    </h3>
+                  </div>
+                </div>
+              </transition>
+
+              <!-- Visualizer bars -->
+              <div class="flex items-end gap-0.5 h-10 mb-5" aria-hidden="true">
+                <div v-for="i in 18" :key="i"
+                     :class="['viz-bar flex-1 bg-brand-red rounded-sm', !playing ? 'paused' : '']">
+                </div>
+              </div>
+
+              <!-- iTunes badge (if artwork from iTunes) -->
+              <div v-if="artworkSource === 'itunes'" class="flex items-center gap-1.5 justify-center sm:justify-start mb-4">
+                <svg class="h-3 w-3 text-zinc-500" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/>
+                </svg>
+                <span class="text-zinc-500 text-xs">Portada vía iTunes</span>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Controls -->
+          <div class="mt-4 flex items-center justify-between gap-4">
+
+            <!-- Play/Pause -->
+            <button
+              @click="togglePlay"
+              :disabled="loading"
+              class="flex items-center justify-center w-14 h-14 rounded-full bg-brand-red hover:bg-brand-red-light transition-all duration-200 hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-red-900/40">
+              <svg v-if="loading" class="animate-spin h-6 w-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+              </svg>
+              <svg v-else-if="playing" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
+              </svg>
+              <svg v-else xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 text-white ml-0.5" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M8 5v14l11-7z"/>
+              </svg>
+            </button>
+
+            <!-- Volume -->
+            <div class="flex items-center gap-3 flex-1">
+              <button @click="toggleMute" class="text-zinc-400 hover:text-white transition-colors shrink-0">
+                <svg v-if="muted || volume === 0" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/>
+                </svg>
+                <svg v-else-if="volume < 50" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M18.5 12c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM5 9v6h4l5 5V4L9 9H5z"/>
+                </svg>
+                <svg v-else xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>
+                </svg>
+              </button>
+              <input
+                type="range"
+                min="0"
+                max="100"
+                :value="muted ? 0 : volume"
+                @input="setVolume"
+                :style="{ '--vol': (muted ? 0 : volume) + '%' }"
+                class="flex-1 h-1 accent-brand-red"
+                aria-label="Volumen"
+              />
+              <span class="text-zinc-500 text-xs w-8 text-right">{{ muted ? 0 : volume }}%</span>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Error message -->
+        <div v-if="error" class="px-5 pb-4">
+          <p class="text-red-400 text-sm text-center bg-red-900/20 rounded-lg px-4 py-2">
+            {{ error }}
+          </p>
+        </div>
+      </div>
+
+      <!-- Hidden audio element -->
+      <audio ref="audioEl" preload="none"></audio>
+
+    </div>
+  </section>
+
+
+  <!-- =================== ABOUT =================== -->
+  <section id="about" class="py-20 bg-[#0a0a0a]">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid lg:grid-cols-2 gap-12 items-center">
+
+        <!-- Visual side -->
+        <div class="relative">
+          <div class="bg-zinc-900 rounded-2xl p-8 border border-zinc-800 relative overflow-hidden">
+            <!-- Background decoration -->
+            <div class="absolute top-0 right-0 w-32 h-32 bg-brand-red/10 rounded-full -translate-y-1/2 translate-x-1/2"></div>
+
+            <div class="grid grid-cols-2 gap-4 relative z-10">
+              <div class="bg-zinc-800/80 rounded-xl p-5 text-center">
+                <p class="font-display text-4xl text-brand-red">60s</p>
+                <p class="text-zinc-400 text-sm mt-1">Rock Clásico</p>
+              </div>
+              <div class="bg-zinc-800/80 rounded-xl p-5 text-center">
+                <p class="font-display text-4xl text-brand-red">70s</p>
+                <p class="text-zinc-400 text-sm mt-1">Rock & Soul</p>
+              </div>
+              <div class="bg-zinc-800/80 rounded-xl p-5 text-center">
+                <p class="font-display text-4xl text-brand-red">80s</p>
+                <p class="text-zinc-400 text-sm mt-1">New Wave & Pop</p>
+              </div>
+              <div class="bg-zinc-800/80 rounded-xl p-5 text-center">
+                <p class="font-display text-4xl text-brand-red">90s</p>
+                <p class="text-zinc-400 text-sm mt-1">Rock Alternativo</p>
+              </div>
+            </div>
+
+            <div class="mt-6 text-center relative z-10">
+              <div class="flex justify-center gap-4">
+                <div class="text-center">
+                  <p class="font-display text-3xl text-white">24/7</p>
+                  <p class="text-zinc-500 text-xs">En el aire</p>
+                </div>
+                <div class="w-px bg-zinc-700"></div>
+                <div class="text-center">
+                  <p class="font-display text-3xl text-white">100%</p>
+                  <p class="text-zinc-500 text-xs">Clásicos</p>
+                </div>
+                <div class="w-px bg-zinc-700"></div>
+                <div class="text-center">
+                  <p class="font-display text-3xl text-white">PE</p>
+                  <p class="text-zinc-500 text-xs">Perú</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Text side -->
+        <div>
+          <p class="text-brand-red text-sm font-semibold uppercase tracking-widest mb-3">Quiénes somos</p>
+          <h2 class="font-display text-4xl sm:text-5xl text-white mb-4">ACERCA DE<br/>NOSOTROS</h2>
+          <div class="section-line mb-6"></div>
+          <p class="text-zinc-400 text-lg leading-relaxed mb-5">
+            En Radio Expres, revivimos la magia de tus años dorados con una selección musical que atraviesa décadas de éxitos.
+          </p>
+          <p class="text-zinc-400 leading-relaxed mb-6">
+            Nuestro compromiso es ofrecerte una experiencia sonora que no solo entretiene, sino que también evoca los mejores recuerdos de tu vida. Desde los riffs icónicos del rock clásico hasta los sintetizadores del pop ochentero, cada canción cuenta una historia.
+          </p>
+          <div class="flex flex-wrap gap-3">
+            <span class="px-4 py-2 bg-zinc-800 rounded-full text-zinc-300 text-sm border border-zinc-700">Rock Clásico</span>
+            <span class="px-4 py-2 bg-zinc-800 rounded-full text-zinc-300 text-sm border border-zinc-700">Pop Internacional</span>
+            <span class="px-4 py-2 bg-zinc-800 rounded-full text-zinc-300 text-sm border border-zinc-700">New Wave</span>
+            <span class="px-4 py-2 bg-zinc-800 rounded-full text-zinc-300 text-sm border border-zinc-700">Baladas</span>
+            <span class="px-4 py-2 bg-zinc-800 rounded-full text-zinc-300 text-sm border border-zinc-700">Alternativo</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- =================== PROGRAMACION / DJs =================== -->
+  <section id="programas" class="py-20 bg-[#0d0d0d]">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+      <div class="text-center mb-12">
+        <p class="text-brand-red text-sm font-semibold uppercase tracking-widest mb-2">Nuestros programas</p>
+        <h2 class="font-display text-4xl sm:text-5xl text-white">EL EQUIPO</h2>
+        <div class="section-line mx-auto mt-3"></div>
+      </div>
+
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div v-for="dj in djs" :key="dj.name"
+             class="dj-card bg-zinc-900 rounded-2xl overflow-hidden border border-zinc-800 group">
+          <!-- DJ Photo -->
+          <div class="relative h-52 bg-zinc-800 overflow-hidden">
+            <img :src="dj.photo" :alt="dj.name"
+                 class="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500"
+                 @error="$event.target.src = 'assets/img/logo.png'" />
+            <div class="absolute inset-0 bg-gradient-to-t from-zinc-900 via-zinc-900/20 to-transparent"></div>
+            <!-- Program badge -->
+            <div class="absolute bottom-3 left-3">
+              <span class="bg-brand-red text-white text-xs font-bold px-2.5 py-1 rounded-full">
+                {{ dj.program }}
+              </span>
+            </div>
+          </div>
+
+          <!-- Info -->
+          <div class="p-5">
+            <h3 class="text-white font-bold text-lg mb-1">{{ dj.name }}</h3>
+            <div class="flex items-center gap-1.5 text-zinc-500 text-sm mb-3">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 text-brand-red" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              {{ dj.schedule }}
+            </div>
+            <p class="text-zinc-400 text-sm leading-relaxed">{{ dj.description }}</p>
+            <div v-if="dj.facebook" class="mt-4">
+              <a :href="dj.facebook" target="_blank" rel="noopener"
+                 class="inline-flex items-center gap-1.5 text-zinc-500 hover:text-brand-red text-sm transition-colors">
+                <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                </svg>
+                Facebook
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- =================== SPONSORS =================== -->
+  <section id="patrocinadores" class="py-16 bg-[#0a0a0a] border-y border-zinc-800/50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-10">
+        <p class="text-brand-red text-sm font-semibold uppercase tracking-widest mb-2">Nos respaldan</p>
+        <h2 class="font-display text-4xl text-white">PATROCINADORES</h2>
+        <div class="section-line mx-auto mt-3"></div>
+        <p class="text-zinc-500 mt-4 max-w-lg mx-auto">Las marcas que confían en Radio Expres para llegar a su audiencia.</p>
+      </div>
+      <!-- Placeholder spots -->
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+        <div v-for="i in 4" :key="i"
+             class="bg-zinc-900 border border-dashed border-zinc-700 rounded-xl h-24 flex items-center justify-center hover:border-brand-red/50 transition-colors group cursor-pointer">
+          <div class="text-center">
+            <svg class="h-6 w-6 text-zinc-700 group-hover:text-brand-red/50 mx-auto mb-1 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 4v16m8-8H4" />
+            </svg>
+            <p class="text-zinc-700 text-xs group-hover:text-zinc-500 transition-colors">Tu marca aquí</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- =================== CTA =================== -->
+  <section id="publicidad" class="py-20 relative overflow-hidden bg-[#0d0d0d]">
+    <!-- Background image with overlay -->
+    <div class="absolute inset-0">
+      <div class="absolute inset-0 bg-gradient-to-r from-[#0d0d0d] via-[#0d0d0d]/90 to-brand-red/20"></div>
+      <div class="absolute right-0 top-0 bottom-0 w-1/2 bg-gradient-to-l from-brand-red/10 to-transparent"></div>
+    </div>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <div class="max-w-2xl">
+        <p class="text-brand-red text-sm font-semibold uppercase tracking-widest mb-3">Publicidad</p>
+        <h2 class="font-display text-4xl sm:text-5xl lg:text-6xl text-white leading-tight mb-6">
+          ¡HAZ QUE TU MARCA<br/>
+          <span class="text-brand-red">RESUENE</span>
+          <br/>CON NOSOTROS!
+        </h2>
+        <p class="text-zinc-400 text-lg leading-relaxed mb-8">
+          ¿Buscas llegar a tu audiencia de forma efectiva? Anuncia en Radio Expres y conecta con una comunidad apasionada por la música de su mejor época. Ofrecemos espacios publicitarios dinámicos que garantizan alta visibilidad para tu marca.
+        </p>
+        <div class="flex flex-wrap gap-4">
+          <a href="#contact" @click.prevent="scrollTo('contact')"
+             class="inline-flex items-center gap-2 bg-brand-red hover:bg-brand-red-light text-white font-semibold px-7 py-3.5 rounded-full transition-all duration-200 hover:shadow-xl hover:shadow-red-900/40 hover:-translate-y-0.5">
+            Contactar ahora
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+            </svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- =================== CONTACT =================== -->
+  <section id="contact" class="py-20 bg-[#0a0a0a]">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 text-center">
+      <p class="text-brand-red text-sm font-semibold uppercase tracking-widest mb-2">Escríbenos</p>
+      <h2 class="font-display text-4xl sm:text-5xl text-white mb-3">CONTACTO</h2>
+      <div class="section-line mx-auto mb-6"></div>
+      <p class="text-zinc-400 mb-10">¿Quieres publicitar tu marca, tienes comentarios o quieres colaborar con nosotros? ¡Contáctanos!</p>
+
+      <div class="grid sm:grid-cols-3 gap-6 mb-10">
+        <!-- WhatsApp / Social -->
+        <div class="bg-zinc-900 rounded-2xl p-6 border border-zinc-800 hover:border-brand-red/30 transition-colors">
+          <div class="w-12 h-12 bg-brand-red/10 rounded-xl flex items-center justify-center mx-auto mb-4">
+            <svg class="h-6 w-6 text-brand-red" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+            </svg>
+          </div>
+          <h3 class="text-white font-semibold mb-1">WhatsApp</h3>
+          <p class="text-zinc-500 text-sm">Escríbenos directamente</p>
+        </div>
+
+        <div class="bg-zinc-900 rounded-2xl p-6 border border-zinc-800 hover:border-brand-red/30 transition-colors">
+          <div class="w-12 h-12 bg-brand-red/10 rounded-xl flex items-center justify-center mx-auto mb-4">
+            <svg class="h-6 w-6 text-brand-red" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+            </svg>
+          </div>
+          <h3 class="text-white font-semibold mb-1">Email</h3>
+          <p class="text-zinc-500 text-sm">info@radioexpres.pe</p>
+        </div>
+
+        <div class="bg-zinc-900 rounded-2xl p-6 border border-zinc-800 hover:border-brand-red/30 transition-colors">
+          <div class="w-12 h-12 bg-brand-red/10 rounded-xl flex items-center justify-center mx-auto mb-4">
+            <svg class="h-6 w-6 text-brand-red" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+            </svg>
+          </div>
+          <h3 class="text-white font-semibold mb-1">Facebook</h3>
+          <p class="text-zinc-500 text-sm">Síguenos en redes</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- =================== FOOTER =================== -->
+  <footer class="bg-zinc-950 border-t border-zinc-800 py-10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex flex-col sm:flex-row items-center justify-between gap-6">
+
+        <!-- Logo -->
+        <div class="flex items-center gap-3">
+          <img src="assets/img/logo.png" alt="Radio Expres" class="h-10 w-10 object-contain" />
+          <div>
+            <p class="font-display text-lg tracking-widest text-white">RADIO <span class="text-brand-red">EXPRES</span></p>
+            <p class="text-zinc-600 text-xs">radioexpres.pe</p>
+          </div>
+        </div>
+
+        <!-- Links -->
+        <div class="flex flex-wrap justify-center gap-5 text-zinc-500 text-sm">
+          <a v-for="link in navLinks" :key="link.id"
+             @click.prevent="scrollTo(link.id)"
+             href="#"
+             class="hover:text-white transition-colors">{{ link.label }}</a>
+        </div>
+
+        <!-- Copyright -->
+        <p class="text-zinc-600 text-xs text-center sm:text-right">
+          &copy; {{ new Date().getFullYear() }} Radio Expres<br/>
+          Todos los derechos reservados
+        </p>
+      </div>
+
+      <!-- Bottom tagline -->
+      <div class="mt-8 pt-6 border-t border-zinc-800/50 text-center">
+        <p class="text-zinc-700 text-xs tracking-widest uppercase">
+          Rock &amp; Pop de los 60s · 70s · 80s · 90s &nbsp;|&nbsp; Espinar · Cusco · Perú
+        </p>
+      </div>
+    </div>
+  </footer>
+
+</div><!-- /#app -->
+
+
+<script>
+const { createApp, ref, reactive, computed, onMounted, onUnmounted, watch } = Vue;
+
+createApp({
+  setup() {
+
+    // ─── Navigation ──────────────────────────────────────────────
+    const scrolled = ref(false);
+    const mobileMenuOpen = ref(false);
+
+    const navLinks = [
+      { id: 'hero',           label: 'Inicio' },
+      { id: 'player',         label: 'En Vivo' },
+      { id: 'about',          label: 'Nosotros' },
+      { id: 'programas',      label: 'Programas' },
+      { id: 'patrocinadores', label: 'Patrocinadores' },
+      { id: 'publicidad',     label: 'Publicidad' },
+      { id: 'contact',        label: 'Contacto' },
+    ];
+
+    function scrollTo(id) {
+      const el = document.getElementById(id);
+      if (el) el.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function onScroll() {
+      scrolled.value = window.scrollY > 40;
+    }
+
+    // ─── DJ / Programs data ───────────────────────────────────────
+    const djs = [
+      {
+        name: 'Jaime Santiago',
+        program: 'Desayuno Express',
+        schedule: 'Lun–Vie · 6:00 am – 8:00 am',
+        description: 'Arranca tu día con la mejor energía. La selección musical que necesitas para empezar con fuerza de lunes a viernes.',
+        photo: 'assets/img/team/jaimesantiago.jpg',
+        facebook: null,
+      },
+      {
+        name: 'Mara Gamero Rosas',
+        program: 'Ciudad Sónica',
+        schedule: 'Lun–Vie · 8:00 am – 10:00 am',
+        description: 'Sumérgete en el vibrante universo musical que Mara tiene preparado para ti cada mañana de lunes a viernes.',
+        photo: 'assets/img/team/maragamero.jpg',
+        facebook: null,
+      },
+      {
+        name: 'Luis Eduardo',
+        program: 'Retromanía',
+        schedule: 'Sáb–Dom · 6:00 am – 8:00 am',
+        description: '¡Despiértate con la energía de los 80s y 90s! Un viaje musical a la mejor época cada fin de semana.',
+        photo: 'assets/img/team/luiseduardo.png',
+        facebook: null,
+      },
+      {
+        name: 'Willy Toledo Solís',
+        program: 'Retrospectiva',
+        schedule: 'Sáb–Dom · 8:00 am – 10:00 am',
+        description: 'Clásicos con historia. Un viaje musical desde los movidos 60s hasta los vibrantes 90s.',
+        photo: 'assets/img/team/willy.png',
+        facebook: null,
+      },
+      {
+        name: 'Jaime Valencia',
+        program: 'De Colección',
+        schedule: 'Sáb–Dom · 10:00 am – 12:00 pm',
+        description: 'Los temas más memorables de todas las épocas en un programa de coleccionista.',
+        photo: 'assets/img/team/jaime.jpg',
+        facebook: 'https://www.facebook.com/jaime.valencia.161',
+      },
+      {
+        name: 'Javier Portillo Zamora',
+        program: 'Billboard Forever',
+        schedule: 'Sáb–Dom · 12:30 pm – 3:00 pm',
+        description: 'Los éxitos que dominaron los rankings internacionales, para siempre en tu corazón.',
+        photo: 'assets/img/team/javierportillo.jpg',
+        facebook: 'https://www.facebook.com/javieresau.portillozamora',
+      },
+    ];
+
+    // ─── Radio Player ─────────────────────────────────────────────
+    const STREAM_URL      = 'https://sonic.sistemahost.es:7118/live';
+    const STATUS_URL      = 'https://sonic.sistemahost.es:7118/status-json.xsl';
+    const CORS_PROXY      = 'https://api.allorigins.win/get?url=';
+    const META_INTERVAL   = 5000;
+    const MAX_BUFFER_AHEAD = 8;   // segundos — por encima de esto se hace reload silencioso
+    const ARTWORK_TIMEOUT  = 4000; // ms máximo para buscar portada
+
+    const audioEl       = ref(null);
+    const playing       = ref(false);
+    const loading       = ref(false);
+    const muted         = ref(false);
+    const volume        = ref(100);
+    const error         = ref(null);
+    const songTitle     = ref('');
+    const artistName    = ref('');
+    const artworkUrl    = ref(null);
+    const artworkSource = ref(null);
+    const loadingArtwork = ref(false);
+
+    let metaTimer        = null;
+    let bufferTimer      = null;
+    let lastRawTitle     = '';
+    let directMetaWorks  = null;      // null = no testeado, true/false = resultado cacheado
+    const artworkCache   = new Map(); // rawTitle → { url, source }
+
+    // ── Audio init ────────────────────────────────────────────────
+    function initAudio() {
+      const audio = audioEl.value;
+      if (!audio) return;
+      audio.volume = volume.value / 100;
+      audio.addEventListener('playing', () => { playing.value = true; loading.value = false; error.value = null; });
+      audio.addEventListener('waiting', () => { loading.value = true; });
+      audio.addEventListener('pause',   () => { playing.value = false; loading.value = false; });
+      audio.addEventListener('error',   () => {
+        loading.value = false;
+        playing.value = false;
+        error.value = 'Error al conectar con la transmisión. Intentando reconectar…';
+        setTimeout(reconnect, 4000);
+      });
+      audio.addEventListener('stalled', () => {
+        loading.value = true;
+        setTimeout(() => {
+          if (loading.value && playing.value) reconnect();
+        }, 8000);
+      });
+    }
+
+    function reconnect() {
+      if (!audioEl.value) return;
+      const wasPlaying = playing.value;
+      audioEl.value.src = '';
+      if (wasPlaying) {
+        setTimeout(() => {
+          audioEl.value.src = STREAM_URL + '?' + Date.now();
+          audioEl.value.play().catch(() => {});
+        }, 1000);
+      }
+    }
+
+    // Reload silencioso para corregir buffer bloat sin interrumpir experiencia
+    async function silentReload() {
+      const audio = audioEl.value;
+      if (!audio || !playing.value) return;
+      const savedVol = audio.volume;
+      audio.src = STREAM_URL + '?' + Date.now();
+      audio.volume = savedVol;
+      try { await audio.play(); } catch (_) {}
+    }
+
+    // Monitorea el buffer cada 15s; si está muy adelantado, recarga
+    function startBufferMonitor() {
+      bufferTimer = setInterval(() => {
+        const audio = audioEl.value;
+        if (!audio || !playing.value || audio.buffered.length === 0) return;
+        const ahead = audio.buffered.end(audio.buffered.length - 1) - audio.currentTime;
+        if (ahead > MAX_BUFFER_AHEAD) silentReload();
+      }, 15000);
+    }
+
+    function stopBufferMonitor() {
+      if (bufferTimer) { clearInterval(bufferTimer); bufferTimer = null; }
+    }
+
+    async function togglePlay() {
+      const audio = audioEl.value;
+      if (!audio) return;
+      error.value = null;
+
+      if (playing.value || loading.value) {
+        audio.pause();
+        audio.src = '';
+        playing.value = false;
+        loading.value = false;
+        stopMeta();
+        stopBufferMonitor();
+        return;
+      }
+
+      loading.value = true;
+      audio.src = STREAM_URL + '?' + Date.now();
+      audio.volume = muted.value ? 0 : volume.value / 100;
+      try {
+        await audio.play();
+        startMeta();
+        startBufferMonitor();
+      } catch (e) {
+        loading.value = false;
+        error.value = 'No se pudo iniciar la reproducción. Intenta de nuevo.';
+      }
+    }
+
+    function toggleMute() {
+      const audio = audioEl.value;
+      if (!audio) return;
+      muted.value = !muted.value;
+      audio.volume = muted.value ? 0 : volume.value / 100;
+    }
+
+    function setVolume(e) {
+      const val = parseInt(e.target.value);
+      volume.value = val;
+      muted.value = val === 0;
+      if (audioEl.value) audioEl.value.volume = val / 100;
+    }
+
+    // ── Metadata ─────────────────────────────────────────────────
+    function startMeta() {
+      fetchMeta();
+      metaTimer = setInterval(fetchMeta, META_INTERVAL);
+    }
+
+    function stopMeta() {
+      if (metaTimer) { clearInterval(metaTimer); metaTimer = null; }
+    }
+
+    async function fetchMeta() {
+      try {
+        let data = null;
+        // Usa el método que ya sabemos que funciona para evitar doble intento
+        if (directMetaWorks === true) {
+          data = await fetchDirect(STATUS_URL);
+        } else if (directMetaWorks === false) {
+          data = await fetchViaCorsProxy(STATUS_URL);
+        } else {
+          // Primera vez: probar directo con timeout corto
+          data = await fetchDirect(STATUS_URL, 3000);
+          if (data) {
+            directMetaWorks = true;
+          } else {
+            data = await fetchViaCorsProxy(STATUS_URL);
+            directMetaWorks = data ? false : null; // null = ninguno funcionó aún
+          }
+        }
+        if (!data) return;
+        parseMeta(data);
+      } catch (_) {}
+    }
+
+    async function fetchDirect(url, timeoutMs = 5000) {
+      try {
+        const ctrl = new AbortController();
+        const tid  = setTimeout(() => ctrl.abort(), timeoutMs);
+        const res  = await fetch(url, { cache: 'no-store', signal: ctrl.signal });
+        clearTimeout(tid);
+        if (!res.ok) return null;
+        return await res.json();
+      } catch { return null; }
+    }
+
+    async function fetchViaCorsProxy(url) {
+      try {
+        const ctrl = new AbortController();
+        const tid  = setTimeout(() => ctrl.abort(), 6000);
+        const res  = await fetch(CORS_PROXY + encodeURIComponent(url), { cache: 'no-store', signal: ctrl.signal });
+        clearTimeout(tid);
+        if (!res.ok) return null;
+        const wrapper = await res.json();
+        return JSON.parse(wrapper.contents);
+      } catch { return null; }
+    }
+
+    function parseMeta(data) {
+      try {
+        const icestats = data?.icestats;
+        if (!icestats) return;
+
+        let source = icestats.source;
+        // source can be an array or object
+        if (Array.isArray(source)) {
+          source = source.find(s => s.listenurl && s.listenurl.includes('/live')) || source[0];
+        }
+        if (!source) return;
+
+        const rawTitle = source.title || source.server_name || '';
+        if (rawTitle === lastRawTitle) return;
+        lastRawTitle = rawTitle;
+
+        // Try to split "Artist - Title"
+        const dashIdx = rawTitle.indexOf(' - ');
+        if (dashIdx > -1) {
+          artistName.value = rawTitle.substring(0, dashIdx).trim();
+          songTitle.value  = rawTitle.substring(dashIdx + 3).trim();
+        } else {
+          artistName.value = '';
+          songTitle.value  = rawTitle;
+        }
+
+        // Fetch artwork from iTunes
+        fetchArtwork(rawTitle, artistName.value, songTitle.value);
+      } catch (_) {}
+    }
+
+    async function fetchArtwork(rawTitle, artist, track) {
+      // Retornar del caché si ya buscamos esta canción
+      if (artworkCache.has(rawTitle)) {
+        const cached = artworkCache.get(rawTitle);
+        artworkUrl.value    = cached.url;
+        artworkSource.value = cached.source;
+        return;
+      }
+
+      loadingArtwork.value = true;
+      try {
+        const term  = (artist && track) ? `${artist} ${track}` : rawTitle;
+        const ctrl  = new AbortController();
+        const tid   = setTimeout(() => ctrl.abort(), ARTWORK_TIMEOUT);
+        const url   = `https://itunes.apple.com/search?term=${encodeURIComponent(term)}&limit=1&media=music&entity=song`;
+        const res   = await fetch(url, { signal: ctrl.signal });
+        clearTimeout(tid);
+
+        if (!res.ok) throw new Error('iTunes error');
+        const json = await res.json();
+
+        let url600 = null;
+        if (json.results && json.results.length > 0) {
+          url600 = json.results[0].artworkUrl100
+            .replace('100x100bb', '600x600bb')
+            .replace('100x100', '600x600');
+        }
+
+        const entry = { url: url600, source: url600 ? 'itunes' : null };
+        artworkCache.set(rawTitle, entry);
+        artworkUrl.value    = entry.url;
+        artworkSource.value = entry.source;
+      } catch (_) {
+        artworkCache.set(rawTitle, { url: null, source: null });
+        artworkUrl.value    = null;
+        artworkSource.value = null;
+      } finally {
+        loadingArtwork.value = false;
+      }
+    }
+
+    // ─── Lifecycle ────────────────────────────────────────────────
+    onMounted(() => {
+      window.addEventListener('scroll', onScroll, { passive: true });
+      initAudio();
+    });
+
+    onUnmounted(() => {
+      window.removeEventListener('scroll', onScroll);
+      stopMeta();
+      stopBufferMonitor();
+    });
+
+    return {
+      // nav
+      scrolled, mobileMenuOpen, navLinks, scrollTo,
+      // djs
+      djs,
+      // player
+      audioEl,
+      playing, loading, muted, volume, error,
+      songTitle, artistName, artworkUrl, artworkSource, loadingArtwork,
+      togglePlay, toggleMute, setVolume,
+    };
+  }
+}).mount('#app');
+</script>
+
+</body>
+</html>
