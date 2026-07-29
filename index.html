@@ -274,19 +274,19 @@
        script). Los selectores reusan los nombres de las utilidades
        Tailwind ya presentes en el markup para no tocar el HTML. */
     html.light-mode {
-      --rc-0: #FBF8F2;
-      --rc-1: #F4EEDF;
-      --rc-2: #EAE1CB;
-      --rc-3: #DDD0AE;
-      --rc-4: #CBBB8C;
-      --rc-ink: #1E1811;
-      --rc-ink-2: #493B27;
-      --rc-ink-3: #6E5C3E;
-      --rc-ink-4: #93805B;
-      --rc-ink-5: #AC9A74;
-      --rc-ink-6: #C7B896;
-      --rc-border: #DED0AC;
-      --rc-border-2: #CDBC90;
+      --rc-0: #FAFAFA;
+      --rc-1: #F0F0F0;
+      --rc-2: #E4E4E4;
+      --rc-3: #D6D6D6;
+      --rc-4: #B5B5B5;
+      --rc-ink: #141414;
+      --rc-ink-2: #3D3D3D;
+      --rc-ink-3: #5C5C5C;
+      --rc-ink-4: #7A7A7A;
+      --rc-ink-5: #979797;
+      --rc-ink-6: #B8B8B8;
+      --rc-border: #DCDCDC;
+      --rc-border-2: #C7C7C7;
     }
 
     /* Fondos sólidos */
@@ -327,16 +327,16 @@
                   var(--rc-0);
     }
     html.light-mode .grid-pattern {
-      background-image: linear-gradient(rgba(30,24,17,0.05) 1px, transparent 1px),
-                        linear-gradient(90deg, rgba(30,24,17,0.05) 1px, transparent 1px);
+      background-image: linear-gradient(rgba(20,20,20,0.05) 1px, transparent 1px),
+                        linear-gradient(90deg, rgba(20,20,20,0.05) 1px, transparent 1px);
     }
     html.light-mode .navbar-scrolled {
-      background: rgba(251, 248, 242, 0.92) !important;
+      background: rgba(250, 250, 250, 0.92) !important;
       border-bottom: 1px solid rgba(224, 16, 32, 0.15);
     }
     html.light-mode .player-bg {
       background-image:
-        linear-gradient(135deg, rgba(251,248,242,0.93) 0%, rgba(234,225,203,0.90) 100%),
+        linear-gradient(135deg, rgba(250,250,250,0.93) 0%, rgba(228,228,228,0.90) 100%),
         url('assets/img/bg-player.webp');
     }
     html.light-mode ::-webkit-scrollbar-track { background: var(--rc-1); }
@@ -345,7 +345,7 @@
        se reescribe directo en vez de pelear con las custom properties de
        gradiente de Tailwind. */
     html.light-mode #publicidad .bg-gradient-to-r {
-      background-image: linear-gradient(to right, var(--rc-1), rgba(244,238,223,0.85) 55%, rgba(224,16,32,0.12));
+      background-image: linear-gradient(to right, var(--rc-1), rgba(240,240,240,0.85) 55%, rgba(224,16,32,0.12));
     }
 
     /* Volume slider */
