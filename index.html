@@ -267,90 +267,102 @@
     .album-spinning { animation: spinSlow 12s linear infinite; border-radius: 50% !important; }
     .album-spinning.paused { animation-play-state: paused; }
 
-    /* ============ LIGHT MODE — "Radio Expres Classic" ============
-       Misma identidad, otra luz: todo cambia de tono menos el rojo
-       de marca, que queda igual en los dos modos. Se activa con la
-       clase .light-mode en <html> (ver watch(activeStation) en el
+    /* ============ CLASSIC MODE — "Radio Expres Classic" ============
+       Rockola vieja: caoba oscura, texto crema envejecido, el rojo
+       de marca queda igual que en el modo normal. Se activa con la
+       clase .classic-mode en <html> (ver watch(activeStation) en el
        script). Los selectores reusan los nombres de las utilidades
        Tailwind ya presentes en el markup para no tocar el HTML. */
-    html.light-mode {
-      --rc-0: #FAFAFA;
-      --rc-1: #F0F0F0;
-      --rc-2: #E4E4E4;
-      --rc-3: #D6D6D6;
-      --rc-4: #B5B5B5;
-      --rc-ink: #141414;
-      --rc-ink-2: #3D3D3D;
-      --rc-ink-3: #5C5C5C;
-      --rc-ink-4: #7A7A7A;
-      --rc-ink-5: #979797;
-      --rc-ink-6: #B8B8B8;
-      --rc-border: #DCDCDC;
-      --rc-border-2: #C7C7C7;
+    html.classic-mode {
+      --rc-0: #16110B;
+      --rc-1: #1F1710;
+      --rc-2: #291F15;
+      --rc-3: #382A1B;
+      --rc-4: #4A3620;
+      --rc-ink: #EDE0C6;
+      --rc-ink-2: #D9C9A8;
+      --rc-ink-3: #B39D77;
+      --rc-ink-4: #8B7856;
+      --rc-ink-5: #6B5640;
+      --rc-ink-6: #4A3620;
+      --rc-border: #4A3620;
+      --rc-border-2: #5C4A34;
     }
 
     /* Fondos sólidos */
-    html.light-mode .bg-\[\#0a0a0a\]  { background-color: var(--rc-0); }
-    html.light-mode .bg-\[\#0d0d0d\]  { background-color: var(--rc-1); }
-    html.light-mode .bg-zinc-950,
-    html.light-mode .bg-zinc-900,
-    html.light-mode .bg-zinc-900\/80 { background-color: var(--rc-2); }
-    html.light-mode .bg-zinc-800,
-    html.light-mode .bg-zinc-800\/80,
-    html.light-mode .bg-zinc-800\/60 { background-color: var(--rc-3); }
-    html.light-mode .bg-zinc-700     { background-color: var(--rc-4); }
-    html.light-mode .bg-zinc-600     { background-color: var(--rc-ink-6); }
-    html.light-mode .bg-zinc-500     { background-color: var(--rc-ink-5); }
+    html.classic-mode .bg-\[\#0a0a0a\]  { background-color: var(--rc-0); }
+    html.classic-mode .bg-\[\#0d0d0d\]  { background-color: var(--rc-1); }
+    html.classic-mode .bg-zinc-950,
+    html.classic-mode .bg-zinc-900,
+    html.classic-mode .bg-zinc-900\/80 { background-color: var(--rc-2); }
+    html.classic-mode .bg-zinc-800,
+    html.classic-mode .bg-zinc-800\/80,
+    html.classic-mode .bg-zinc-800\/60 { background-color: var(--rc-3); }
+    html.classic-mode .bg-zinc-700     { background-color: var(--rc-4); }
+    html.classic-mode .bg-zinc-600     { background-color: var(--rc-ink-6); }
+    html.classic-mode .bg-zinc-500     { background-color: var(--rc-ink-5); }
 
     /* Texto — el texto blanco sobre fondo rojo (botones, badges, íconos
        del play) se deja en blanco a propósito, por eso la exclusión y
        la regla de "vuelta a blanco" para íconos hijos de .bg-brand-red. */
-    html.light-mode .text-white:not(.bg-brand-red) { color: var(--rc-ink); }
-    html.light-mode .bg-brand-red .text-white       { color: #fff; }
-    html.light-mode .text-zinc-300 { color: var(--rc-ink-2); }
-    html.light-mode .text-zinc-400 { color: var(--rc-ink-3); }
-    html.light-mode .text-zinc-500 { color: var(--rc-ink-4); }
-    html.light-mode .text-zinc-600 { color: var(--rc-ink-5); }
-    html.light-mode .text-zinc-700 { color: var(--rc-ink-6); }
-    html.light-mode .hover\:text-white:hover { color: var(--rc-ink); }
+    html.classic-mode .text-white:not(.bg-brand-red) { color: var(--rc-ink); }
+    html.classic-mode .bg-brand-red .text-white       { color: #fff; }
+    html.classic-mode .text-zinc-300 { color: var(--rc-ink-2); }
+    html.classic-mode .text-zinc-400 { color: var(--rc-ink-3); }
+    html.classic-mode .text-zinc-500 { color: var(--rc-ink-4); }
+    html.classic-mode .text-zinc-600 { color: var(--rc-ink-5); }
+    html.classic-mode .text-zinc-700 { color: var(--rc-ink-6); }
+    html.classic-mode .hover\:text-white:hover { color: var(--rc-ink); }
+
+    /* Letrero de neón — el rojo de marca brilla como el tubo encendido,
+       el resto de rótulos (Bebas Neue) brillan ámbar como el resto de
+       luces de la rockola. text-shadow hereda, así que el span rojo
+       dentro de un título ya en ámbar toma su propio glow al matchear
+       .text-brand-red directamente. */
+    html.classic-mode .font-display {
+      text-shadow: 0 0 10px rgba(232,163,61,0.5), 0 0 26px rgba(232,163,61,0.22);
+    }
+    html.classic-mode .text-brand-red {
+      text-shadow: 0 0 10px rgba(224,16,32,0.65), 0 0 24px rgba(224,16,32,0.3);
+    }
 
     /* Bordes */
-    html.light-mode .border-zinc-800,
-    html.light-mode .border-zinc-800\/50 { border-color: var(--rc-border); }
-    html.light-mode .border-zinc-700,
-    html.light-mode .border-zinc-700\/50 { border-color: var(--rc-border-2); }
+    html.classic-mode .border-zinc-800,
+    html.classic-mode .border-zinc-800\/50 { border-color: var(--rc-border); }
+    html.classic-mode .border-zinc-700,
+    html.classic-mode .border-zinc-700\/50 { border-color: var(--rc-border-2); }
 
     /* Fondos compuestos / imágenes — no son utilidades de Tailwind */
-    html.light-mode .hero-bg {
-      background: radial-gradient(ellipse at 70% 50%, rgba(224, 16, 32, 0.10) 0%, transparent 60%),
-                  radial-gradient(ellipse at 30% 80%, rgba(224, 16, 32, 0.06) 0%, transparent 50%),
+    html.classic-mode .hero-bg {
+      background: radial-gradient(ellipse at 70% 50%, rgba(224, 16, 32, 0.14) 0%, transparent 60%),
+                  radial-gradient(ellipse at 30% 80%, rgba(232, 163, 61, 0.08) 0%, transparent 50%),
                   var(--rc-0);
     }
-    html.light-mode .grid-pattern {
-      background-image: linear-gradient(rgba(20,20,20,0.05) 1px, transparent 1px),
-                        linear-gradient(90deg, rgba(20,20,20,0.05) 1px, transparent 1px);
+    html.classic-mode .grid-pattern {
+      background-image: linear-gradient(rgba(232,163,61,0.05) 1px, transparent 1px),
+                        linear-gradient(90deg, rgba(232,163,61,0.05) 1px, transparent 1px);
     }
-    html.light-mode .navbar-scrolled {
-      background: rgba(250, 250, 250, 0.92) !important;
-      border-bottom: 1px solid rgba(224, 16, 32, 0.15);
+    html.classic-mode .navbar-scrolled {
+      background: rgba(22, 17, 11, 0.92) !important;
+      border-bottom: 1px solid rgba(224, 16, 32, 0.2);
     }
-    html.light-mode .player-bg {
+    html.classic-mode .player-bg {
       background-image:
-        linear-gradient(135deg, rgba(250,250,250,0.93) 0%, rgba(228,228,228,0.90) 100%),
+        linear-gradient(135deg, rgba(22,17,11,0.90) 0%, rgba(41,31,21,0.85) 100%),
         url('assets/img/bg-player.webp');
     }
-    html.light-mode ::-webkit-scrollbar-track { background: var(--rc-1); }
+    html.classic-mode ::-webkit-scrollbar-track { background: var(--rc-1); }
 
     /* CTA: overlay degradado sobre fondo oscuro fijo por valores arbitrarios,
        se reescribe directo en vez de pelear con las custom properties de
        gradiente de Tailwind. */
-    html.light-mode #publicidad .bg-gradient-to-r {
-      background-image: linear-gradient(to right, var(--rc-1), rgba(240,240,240,0.85) 55%, rgba(224,16,32,0.12));
+    html.classic-mode #publicidad .bg-gradient-to-r {
+      background-image: linear-gradient(to right, var(--rc-1), rgba(41,31,21,0.85) 55%, rgba(224,16,32,0.15));
     }
 
     /* Volume slider */
-    html.light-mode input[type=range] { background: var(--rc-4); }
-    html.light-mode input[type=range]::-webkit-slider-runnable-track {
+    html.classic-mode input[type=range] { background: var(--rc-4); }
+    html.classic-mode input[type=range]::-webkit-slider-runnable-track {
       background: linear-gradient(to right, #e01020 var(--vol, 0%), var(--rc-4) var(--vol, 0%));
     }
   </style>
@@ -988,9 +1000,9 @@ createApp({
     const currentStation = computed(() => stations.find(s => s.id === activeStation.value) || stations[0]);
     const streamUrl      = computed(() => STREAM_BASE + currentStation.value.path);
 
-    // "Radio Expres Classic" también actúa como toggle de modo claro (ver CSS .light-mode)
+    // "Radio Expres Classic" también actúa como toggle del tema rockola (ver CSS .classic-mode)
     watch(activeStation, (id) => {
-      document.documentElement.classList.toggle('light-mode', id === 'classic');
+      document.documentElement.classList.toggle('classic-mode', id === 'classic');
     }, { immediate: true });
 
     const audioEl       = ref(null);
